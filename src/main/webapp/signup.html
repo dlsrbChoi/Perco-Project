@@ -1,0 +1,94 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/core.css">
+<title>Perco</title>
+<style>
+.desc {
+	float: left;
+	width: 100%;
+	color: #888;
+	font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+	<div class="page-hdr">PERCO</div>
+	<div class="page-body">
+		<div class="section pad-24 mtop-30">
+			<input id="id" type="text" placeholder="아이디" required>
+			<input id="ps" type="password" class="mtop-10" placeholder="패스워드">
+			<input id="ps2" type="password" class="mtop-10" placeholder="패스워드 확인"> 
+			<input id="name" type="text" class="mtop-10" placeholder="이름">
+			<input id="birth" type="text" class="mtop-10" placeholder="생년월일">
+			<input id="phon" type="text" class="mtop-10" placeholder="핸드폰번호">
+			<input type="submit" class="mtop-20" value="회원가입하기" onclick="signup()">
+		</div>
+		<div class="section pad-24 mtop-30">
+			<div class="desc mtop-20 mbot-20">
+			    회원 가입시 -(하이픈)을 생략해 주세요.
+			</div>
+		</div>
+	</div>
+	<div class="page-footer">광 고</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function signup(){
+	var id = $("#id").val().trim(); 
+	if (id == "") {
+		alert("아이디를 입력해 주세요."); 
+		$("#id").focus();
+		return;
+	}
+	var ps = $("#ps").val().trim(); 
+	if (ps == "") {
+		alert("패스워드를 입력해 주세요."); 
+		$("#ps").focus();
+		return;
+	}
+	var ps2 = $("#ps2").val().trim();
+	if (ps != ps2) {
+		alert("입력된 두 개의 패스워드가 일치하지 않습니다."); 
+		$("#ps2").focus();
+		return;
+	}
+	var name = $("#name").val().trim();
+	if (name == "") {
+		alert("이름을 입력해 주세요."); 
+		$("#name").focus();
+		return;
+	}
+	var birth = $("#birth").val().trim();
+	if (birth == "") {
+		alert("생년월일을 입력해 주세요."); 
+		$("#birth").focus();
+		return;
+	}
+	var phon = $("#phon").val().trim();
+	if (phon == "") {
+		alert("핸드폰 번호를 입력해 주세요."); 
+		$("#phon").focus();
+		return;
+	}
+	var usrobj = {id: id, password: ps, name: name, birth: birth, phon: phon};
+	var params = {id: id, jsonstr: JSON.stringify(usrobj)};
+	var url = "jsp/signup.jsp";
+	AJAX.call(url, params, function(data) {
+		var code = data.trim();
+		if (code == "EX") {
+			alert("이미 가입한 회원입니다");
+		} 
+		else if (code == "ER") {
+			alert("회원가입 처리중 에러가 발했습니다");
+		} else {
+			alert("회원 가입이 완료되었습니다");
+			window.location.href = "login.html";
+		}
+	});
+}
+</script>

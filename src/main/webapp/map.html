@@ -1,0 +1,101 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>Perco</title>
+<style>
+.feed { border-top: 1px solid #eee; }
+.feed .author { position: relative; }
+.feed .author .btn-del {
+	position: absolute;
+	right: 16px; top: 10px;
+	width: 42px; height: 42px;
+	background-size: 24px;
+	background-position: 50%;
+	background-repeat: no-repeat;
+}
+</style>
+</head>
+<body>
+<div class="page-hdr">PERCO</div>
+	<div class="page-body">
+		<div class="page-mnu">
+			<ul id="nav">
+			<li><a class="menu" onclick="main()"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+</svg></a></li>
+			</ul>
+		</div>
+		<div id="list" class="section"></div>	
+	</div>
+	
+	<!-- 지도영역 -->
+	<div id="map" style="width: 100%; height: 600px;"></div>
+	
+</body>
+</html>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=836744413879e1d6f1368efad0f44951&libraries=services,clusterer,drawing">	</script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+	Page.init(start);
+});
+
+var myId = null;
+function start(uid) {
+	myId = uid;
+	AJAX.call("jsp/MyGymList.jsp", {id: uid}, function(data) {
+		var list = JSON.parse(data.trim());
+		show(list);
+	  });
+	}
+	
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+mapOption = {
+    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+    level: 3 // 지도의 확대 레벨
+};  
+
+// 지도를 생성합니다    
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new kakao.maps.services.Geocoder();
+function show(list){	
+	for (var i=0; i<list.length; i++) {
+		// 주소로 좌표를 검색합니다
+		console.log(i);
+		geocoder.addressSearch(list[i].position, function(result, status) {
+		    // 정상적으로 검색이 완료됐으면
+		    console.log(i);
+		     if (status === kakao.maps.services.Status.OK) {
+		    	 console.log(i);
+		        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+		        // 결과값으로 받은 위치를 마커로 표시합니다
+		        var marker = new kakao.maps.Marker({
+		            map: map,
+		            position: coords
+		        });
+	    		// 인포윈도우로 장소에 대한 설명을 표시합니다
+	    		 console.log(i-1);
+	    		var name = "<div style='width:150px;text-align:center;padding:6px 0;'>"+list[i-1].gymname+" </div>";	    		
+		        infowindow = new kakao.maps.InfoWindow({
+		        	content: name
+		        });
+		        infowindow.open(map, marker);
+		        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+		        map.setCenter(coords);
+		    } 
+		});
+	}
+}
+
+
+function main() {
+	window.location.href = "gymview.html";
+}
+</script>

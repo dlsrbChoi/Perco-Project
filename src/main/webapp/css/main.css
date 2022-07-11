@@ -1,0 +1,159 @@
+.page-mnu {
+	float: left;
+	width: 100%;
+	padding: 12px 10px;
+	box-sizing: border-box;
+	background-color: black;
+	border-bottom: 1px solid #eee;
+}
+.page-mnu .menu {
+	float: left;
+	padding: 0px 10px;
+	font-size: 0.90em;
+	background-color: black;
+}
+.feed {
+	float: left;
+	width: 100%;
+	padding: 10px 0px;
+	border-top: 1px solid #f4f4f4;
+}
+.feed .author {
+	float: left;
+	width: 100%;
+	padding: 1px 16px;
+	box-sizing: border-box;
+}
+.feed .author .photo {
+	float: left;
+	padding: 5px;
+	width: 30px; height: 30px;
+	background-image: url("../images/dumbbell.png");
+	background-size: cover;
+	background-position: 50%;
+	background-repeat: no-repeat;
+	overflow: hidden;
+}
+.feed .author .name {
+	float: left;
+	margin-left: 10px;
+	line-height: 42px;
+	font-weight: bold;
+}
+.feed .author .posiname {
+	float: left;
+	margin-left: 10px;
+	line-height: 42px;
+	font-weight: bold;
+}
+.feed .author .gymname {
+	color: rgb(18, 113, 241);
+	float: left;
+	margin-left: 10px;
+	line-height: 42px;
+	font-weight: bold;
+}
+.feed .author .cnt {
+	float: left;
+	margin-left: 10px;
+	line-height: 42px;
+	font-weight: bold;
+	border: 1px solid rgb(18, 113, 241);
+	border-radius: 15px;
+	padding: 0.5px 10px;
+	background-color: rgb(18, 113, 241);
+	border-color: rgb(18, 113, 241);
+	color: white;
+	font-size: 1.5em;
+}
+.feed .author .green {
+	float: left;
+	margin-left: 10px;
+	line-height: 42px;
+	font-weight: bold;
+	border: 1px dashed rgb(18, 113, 241);
+	border-radius: 15px;
+	padding: 0.5px 10px;
+	background-color: white;
+	border-color: green;
+	color: green;
+	font-size: 1.5em;
+}
+.feed .author .blue {
+	float: left;
+	margin-left: 10px;
+	line-height: 42px;
+	font-weight: bold;
+	border: 1px dashed rgb(18, 113, 241);
+	border-radius: 15px;
+	padding: 0.5px 10px;
+	background-color: white;
+	border-color: blue;
+	color: blue;
+	font-size: 1.5em;
+}
+.feed .author .red {
+	float: left;
+	margin-left: 10px;
+	line-height: 42px;
+	font-weight: bold;
+	border: 1px dashed rgb(18, 113, 241);
+	border-radius: 15px;
+	padding: 0.5px 10px;
+	background-color: white;
+	border-color: red;
+	color: red;
+	font-size: 1.5em;
+}
+.feed .image {
+	float: left;
+	width: 100%;
+	padding-top: 56.25%;
+	background-size: cover;
+	background-position: 50%;
+	background-repeat: no-repeat;
+	overflow: hidden;
+}
+.feed .text {
+	float: left;
+	width: 100%;
+	margin: 20px 0px;
+	padding: 0px 16px;
+	box-sizing: border-box;
+	/* multi-line text ellipsis */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-wrap: break-word;
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
+}
+#nav {
+	list-style:none;
+	height:40px;
+	padding:5px 1px;
+	margin:0;
+	background:black;
+}
+#nav li{
+	float:left;
+	position:relative;
+	margin:5px 2px;
+	padding: 0;
+}
+#nav li a{
+	display:block;
+	font-weight:bold;
+	font-size:0.9em;
+	margin:0;
+	color:#A6A6A6;
+	margin:0;
+	text-decoration:none;
+	text-shadow:0 1px 1px rgba(0, 0, 0, 0.3);
+}
+#nav li:hover > a{
+	background: ffcab2;
+	color: black;
+	margin: 0;
+	padding: 5px;
+}

@@ -1,0 +1,129 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>PERCO</title>
+<style>
+.pad-4 { padding: 0 4px; }
+.pad-8 { 
+padding: 0 8px;
+color: rgb(18, 113, 241);
+font-weight:bold;
+}
+.desc {
+	float: left;
+	width: 100%;
+	color: #888;
+	font-size: 0.9em;
+}
+.aa { color: black; }
+</style>
+</head>
+<body>
+<div class="page-hdr">PERCO</div>
+	<div class="page-body">
+	<div class="page-mnu">
+		<ul id="nav">
+			<li><a style="color:white" class="menu" onclick="dirpage()">헬스장 관리</a></li>
+			<li><a class="menu" onclick="showGyminfo()">헬스장 정보</a></li>
+			<li><a class="menu" onclick="logout()">로그아웃</a></li>
+		</ul>
+		</div>
+		<div class="section pad-24 mtop-30">
+			<div class="section pad-8 mbot-20">
+			    헬스장 이름 : <span class="aa" id="gymname"></span>
+		    </div>
+		    <div class="section pad-8 mbot-20">
+			    현재 헬스장 인원수를 입력해 주세요.
+		    </div>
+			<input id="cnt" type="text" class="mbot-10" placeholder="현재 인원 입력">
+			<div class="section pad-8 mbot-20">
+			    공지사항을 입력해 주세요.
+		    </div>
+		    <textarea id="gongzi" cols="40" class="mbot-10" rows="10" wrap="hard" placeholder="공지사항 입력"></textarea>
+			<input type="submit" class="mtop-25" value="수정하기" onclick="update()">
+		</div>
+	</div>
+	<div class="page-footer">광 고</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+	Page.init(start);
+});
+
+var directorObj = null;
+
+function start(uid) {
+	var params = {id: uid};
+	AJAX.call("jsp/directorGet.jsp", params, function(data) {
+		directorObj = JSON.parse(data.trim());
+		setPage(directorObj);
+	});
+}
+
+function setPage(dobj) {
+	if (dobj == null) return;
+	$("#gymname").html(dobj.gymname);
+	$("#cnt").val(dobj.cnt);
+	$("#gongzi").val(dobj.gongzi);
+}
+
+function update() {
+	var cnt = $("#cnt").val().trim();
+	var gongzi = $("#gongzi").val().trim();
+	console.log(gongzi);
+	if (cnt == "") {
+		alert("현재 헬스장 인원수를 입력해 주세요.");
+		$("#cnt").focus();
+		return;
+	}
+	if (gongzi == "") {
+		alert("공지사항을 입력해 주세요.");
+		$("#gongzi").focus();
+		return;
+	}
+	
+	var jsonobj = directorObj;
+	if (cnt != "") jsonobj.cnt = cnt;
+	if (gongzi != "") jsonobj.gongzi = gongzi;
+	
+	var params = new FormData();
+	params.append("id", jsonobj.id);
+	params.append("jsonstr", JSON.stringify(jsonobj));
+
+	var url = "jsp/directorUpdate.jsp";
+	AJAX.call(url, params, function(data) {
+		var code = data.trim();
+		if (code == "ER") {
+		    alert("업데이트 중 오류가 발생하였습니다.");
+		}
+		else {
+			alert("헬스장 수정이 완료되었습니다.");
+			window.location.href = "dirpage.html";
+		}
+	}, true);
+}
+
+
+function dirpage() {
+	window.location.href = "dirpage.html";
+}
+
+function showGyminfo() {
+	window.location.href = "Gyminfo.html";
+}
+
+function logout() {
+	AJAX.call("jsp/logout.jsp", null, function(data) {
+	    alert("로그아웃을 완료하였습니다.");
+	    DataCache.remove("mainCache"); //캐시를 날려주는 코드
+	    window.location.href = "login.html";
+	});
+}
+</script>

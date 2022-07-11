@@ -1,0 +1,125 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>Perco</title>
+<style>
+.feed { border-top: 1px solid #eee; }
+.feed .author { position: relative; }
+.feed .author .btn-del {
+	position: absolute;
+	right: 16px; top: 10px;
+	width: 42px; height: 42px;
+	background-size: 24px;
+	background-position: 50%;
+	background-repeat: no-repeat;
+}
+textarea {
+	float: left;
+	width: 100%;
+	height: 160px;
+	padding: 16px;
+	box-sizing: border-box;
+	font-size: 1.0em;
+	font-family: 'MalgunGothic', 'Arial';
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	outline: none;
+}
+</style>
+</head>
+<body>
+<div class="page-hdr">PERCO</div>
+	<div class="page-body">
+		<div class="page-mnu">
+			<ul id="nav">
+			<li><a class="menu" onclick="board()"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+</svg></a></li>
+			</ul>
+		</div>
+		<div class="section pad-24 mtop-30">
+			<input id="id" type="text" placeholder="아이디(이메일주소)">
+			<input id="subject" type="text" placeholder="제목">
+			<textarea id="content" class="mtop-10" placeholder="이곳에 글을 작성해 주세요."></textarea>
+		
+			<input type="submit" class="mtop-30" value="업로드하기" onclick="upload()">
+		</div>
+	</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+	Page.init(start);
+});
+
+function start(uid) {
+	AJAX.call("jsp/userList.jsp", null, function(data) {
+		var users = JSON.parse(data.trim());
+	});
+}
+
+function upload() {
+	var id = $("#id").val().trim();
+	if (id == "") {
+		alert("아이디를 입력해주세요.");
+		$("#id").focus();
+		return;
+	}
+	
+	var subject = $("#subject").val().trim();
+	if (subject == "") {
+		alert("제목을 입력해주세요.");
+		$("#subject").focus();
+		return;
+	}
+	
+	var content = $("#content").val().trim();
+	if (content == "") {
+		alert("작성글을 입력해주세요.");
+		$("#content").focus();
+		return;
+	}
+	
+	var jsonobj= {id: id, subject:subject, content: content, ts: getTime()};
+	
+	var params = new FormData(); // multipart/form-data를전송하기위해웹표준에서제공하는객체
+	//params.append("id", id);
+	//params.append("content", content);
+	params.append("jsonstr", JSON.stringify(jsonobj));
+	
+	var url = "jsp/feedAdd.jsp";
+	AJAX.call(url, params, function(data) {
+		var code = data.trim();
+		if (code == "ER") {
+			alert("작성글의 업로드 중 오류가 발생하였습니다.");
+		} 
+		else {
+			alert("작성글의 업로드가 완료되었습니다.");
+			window.location.href = "board.html";
+		}
+	}, true);
+}	
+
+function getTime() {
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = ("0" + (1 + date.getMonth())).slice(-2);
+	var day = ("0" + date.getDate()).slice(-2);
+	var hour = ("0" + date.getHours()).slice(-2);
+	var min = ("0" + date.getMinutes()).slice(-2);
+	var sec = ("0" + date.getSeconds()).slice(-2);
+	return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
+}
+
+
+
+function board() {
+	window.location.href = "board.html";
+}
+</script>

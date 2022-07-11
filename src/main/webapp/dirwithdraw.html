@@ -1,0 +1,76 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>PERCO</title>
+<style>
+.desc {
+	float: left;
+	width: 100%;
+	color: #888;
+	font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+<div class="page-hdr">PERCO</div>
+	<div class="page-body">
+	<div class="page-mnu">
+		<ul id="nav">
+		    <li><a class="menu" onclick="home()">헬스장 관리</a></li>
+			<li><a class="menu" onclick="showGyminfo()">헬스장 정보</a></li>
+			<li><a style="color:white" class="menu" onclick="dirwithdraw()">회원탈퇴</a></li>
+		</ul>
+		</div>
+		<div class="section pad-24 mtop-30">
+			<input id="id" type="text" placeholder="아이디" required>
+			<input type="submit" class="mtop-20"value="회원탈퇴" onclick="withdraw()">
+		</div>`
+	</div>
+	<div class="page-footer">광 고</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function(){
+	Page.init(setup);
+});
+function setup(uid){
+	alert("로그인 아이디 : " + uid);
+}
+function withdraw(){
+	var id = $("#id").val().trim(); 
+	if (id == "") {
+		alert("아이디를 입력해 주세요."); 
+		$("#id").focus();
+		return;
+	}
+	var url = "jsp/dirwithdraw.jsp?id=" + id;
+	AJAX.call(url, null, function(data) {
+		var code = data.trim();
+		if (code == "NA") {
+			alert("회원정보를 찾을 수 없습니다.");
+		} else if (code == "ER") {
+			alert("회원 가입중 오류가 발했습니다");
+		} else {
+			alert("회원탈퇴가 완료되었습니다.");
+			window.location.href = "login.html";
+		}
+	});
+}
+function showGyminfo() {
+	window.location.href = "Gyminfo.html";
+}
+
+function dirwithdraw() {
+	window.location.href = "dirwithdraw.html";
+}
+
+function home() {
+	window.location.href = "dirpage.html";
+}	
+</script>

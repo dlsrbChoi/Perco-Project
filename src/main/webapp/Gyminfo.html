@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8" />
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/main.css">
+<title>Perco</title>
+<style>
+.pad-4 { padding: 0 4px; }
+.pad-8 { 
+padding: 0 8px;
+color: rgb(18, 113, 241);
+font-weight:bold;
+}
+.desc {
+	float: left;
+	width: 100%;
+	color: #888;
+	font-size: 0.9em;
+}
+.aa { color: black; }
+</style>
+</head>
+<body>
+    <div class="page-hdr">PERCO</div>
+	<div class="page-body">
+		<div class="page-mnu">
+		<ul id="nav">
+		    <li><a class="menu" onclick="home()">헬스장 관리</a></li>
+			<li><a style="color:white" class="menu" onclick="showGyminfo()">헬스장 정보</a></li>
+			<li><a class="menu" onclick="dirwithdraw()">회원탈퇴</a></li>
+		</ul>
+		</div>
+		<div class="section pad-24 mtop-30">
+			<div class="section pad-8 mbot-20">
+			    아이디 : <span class="aa" id="id"></span>
+		    </div>
+		    <input id="name" type="text" class="mbot-10" placeholder="이름">
+		    <input id="gymname" type="text" class="mbot-10" placeholder="헬스장 이름">
+		    <input id="position" type="text" class="mbot-10" placeholder="헬스장 위치">
+		    <input id="number" type="text" class="mbot-10" placeholder="헬스장 번호">
+			<input type="submit" class="mtop-30" value="수정하기" onclick="update()">
+		</div>
+	</div>
+	<div class="page-footer">광 고</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+$(document).ready(function() {
+	Page.init(start);
+});
+
+var directorObj = null;
+function start(uid) {
+	var params = {id: uid};
+	AJAX.call("jsp/directorGet.jsp", params, function(data) {
+		directorObj = JSON.parse(data.trim());
+		setPage(directorObj);
+	});
+}
+
+function setPage(dobj) {
+	if (dobj == null) return;
+	$("#id").html(dobj.id);
+	$("#name").val(dobj.name);
+	$("#gymname").val(dobj.gymname);
+	$("#position").val(dobj.position);
+	$("#number").val(dobj.number);
+}
+
+function update() {
+	var name = $("#name").val().trim();
+	if (name == "") {
+		alert("이름을 입력해 주세요.");
+		$("#name").focus();
+		return;
+	}
+	var gymname = $("#gymname").val().trim();
+	if (gymname == "") {
+		alert("헬스장 이름을 입력해 주세요.");
+		$("#gymname").focus();
+		return;
+	}
+	var position = $("#position").val().trim();
+	if (position == "") {
+		alert("헬스장 위치를 입력해 주세요.");
+		$("#position").focus();
+		return;
+	}
+	var number = $("#number").val().trim();
+	if (number == "") {
+		alert("헬스장 번호를 입력해 주세요.");
+		$("#number").focus();
+		return;
+	}
+	
+	var jsonobj = directorObj;
+	if (name != "") jsonobj.name = name;
+	if (gymname != "") jsonobj.gymname = gymname;
+	if (position != "") jsonobj.position = position;
+	if (number != "") jsonobj.number = number;
+	
+	var params = new FormData();
+	params.append("id", jsonobj.id);
+	params.append("jsonstr", JSON.stringify(jsonobj));
+
+	var url = "jsp/GymUpdate.jsp";
+	AJAX.call(url, params, function(data) {
+		var code = data.trim();
+		if (code == "ER") {
+		    alert("업데이트 중 오류가 발생하였습니다.");
+		}
+		else {
+			alert("헬스장 정보 업데이트가 완료되었습니다.");
+			window.location.href = "dirpage.html";
+		}
+	}, true);
+}
+
+function showGyminfo() {
+	window.location.href = "Gyminfo.html";
+}
+
+function dirwithdraw() {
+	window.location.href = "dirwithdraw.html";
+}
+
+function home() {
+	window.location.href = "dirpage.html";
+}
+</script>

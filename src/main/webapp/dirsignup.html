@@ -1,0 +1,108 @@
+<html>
+<head>
+<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=0">
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/core.css">
+<title>PERCO</title>
+<style>
+.desc {
+	float: left;
+	width: 100%;
+	color: #888;
+	font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+	<div class="page-hdr">PERCO</div>
+	<div class="page-body">
+		<div class="section pad-24 mtop-30">
+			<input id="id" type="text" placeholder="아이디" required>
+			<input id="ps" type="password" class="mtop-10" placeholder="패스워드">
+			<input id="ps2" type="password" class="mtop-10" placeholder="패스워드 확인"> 
+			<input id="name" type="text" class="mtop-10" placeholder="이름">
+			<input id="gymname" type="text" class="mtop-10" placeholder="헬스장 이름">
+			<input id="position" type="text" class="mtop-10" placeholder="헬스장 위치">
+			<input id="number" type="text" class="mtop-10" placeholder="헬스장 번호"> 
+			<input id="cnt" type="text" class="mtop-10" placeholder="현재 인원수">
+			<input type="submit" class="mtop-20" value="회원가입하기" onclick="signup()">
+		</div>
+		<div class="section pad-24 mtop-20">
+			<div class="desc mtop-5 mbot-20">
+			    회원 가입시 -(하이픈)을 생략해 주세요.
+			</div>
+		</div>
+	</div>
+	<div class="page-footer">광 고</div>
+</body>
+</html>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/core.js"></script>
+<script>
+function signup(){
+	var id = $("#id").val().trim(); 
+	if (id == "") {
+		alert("아이디를 입력해 주세요."); 
+		$("#id").focus();
+		return;
+	}
+	var ps = $("#ps").val().trim(); 
+	if (ps == "") {
+		alert("패스워드를 입력해 주세요."); 
+		$("#ps").focus();
+		return;
+	}
+	var ps2 = $("#ps2").val().trim();
+	if (ps != ps2) {
+		alert("입력된 두 개의 패스워드가 일치하지 않습니다."); 
+		$("#ps2").focus();
+		return;
+	}
+	var name = $("#name").val().trim();
+	if (name == "") {
+		alert("이름을 입력해 주세요."); 
+		$("#name").focus();
+		return;
+	}
+	var gymname = $("#gymname").val().trim();
+	if (gymname == "") {
+		alert("헬스장 이름을 입력해 주세요."); 
+		$("#gymname").focus();
+		return;
+	}
+	var position = $("#position").val().trim();
+	if (position == "") {
+		alert("헬스장 위치를 입력해 주세요."); 
+		$("#position").focus();
+		return;
+	}
+	var number = $("#number").val().trim();
+	if (number == "") {
+		alert("헬스장 번호를 입력해 주세요."); 
+		$("#number").focus();
+		return;
+	}
+	var cnt = $("#cnt").val().trim();
+	if (cnt == "") {
+		alert("현재 인원수를 입력해 주세요."); 
+		$("#cnt").focus();
+		return;
+	}
+	var dirobj = {id: id, password: ps, name: name, gymname: gymname, position: position, number: number, cnt: cnt};
+	var params = {id: id, jsonstr: JSON.stringify(dirobj)};
+	var url = "jsp/dirsignup.jsp";
+	AJAX.call(url, params, function(data) {
+		var code = data.trim();
+		if (code == "EX") {
+			alert("이미 가입한 회원입니다");
+		} 
+		else if (code == "ER") {
+			alert("회원가입 처리중 에러가 발했습니다");
+		} else {
+			alert("회원 가입이 완료되었습니다");
+			window.location.href = "dirlogin.html";
+		}
+	});
+}
+</script>
